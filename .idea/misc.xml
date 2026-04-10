@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+ feature/uc2-BasicRoom
+ HEAD
+  <component name="ProjectRootManager" version="2" default="true">
+=======
   <component name="ProjectRootManager" version="2" languageLevel="JDK_25" default="true" project-jdk-name="25" project-jdk-type="JavaSDK">
+ 402754024c84897d7501656b33212c3fc9b8fa25
+=======
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_25" default="true" project-jdk-name="25" project-jdk-type="JavaSDK">
+ dev
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>
