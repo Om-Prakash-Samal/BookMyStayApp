@@ -1,36 +1,125 @@
-package com.hotel.uc1;
+package com.hotel.uc5;
 
 /**
- * HotelBookingApp serves as the entry point for the Hotel Booking System.
+ * Demonstrates UC5: Booking Request Queue using FIFO ordering.
+ *
+ * @author Niranjan Manivannan
+ * @version 1.0
+ */
+public class BookingQueueDemo {
+
+    public static void main(String[] args) {
+        BookingRequestQueue queue = new BookingRequestQueue();
+
+        System.out.println("===== Guests Submitting Booking Requests =====");
+        queue.addRequest(new Reservation("Alice", "Single Room", 2));
+        queue.addRequest(new Reservation("Bob",   "Double Room", 3));
+        queue.addRequest(new Reservation("Carol",  "Suite Room",  1));
+        queue.addRequest(new Reservation("David", "Single Room", 5));
+
+        System.out.println();
+        queue.displayQueue();
+
+        System.out.println();
+        System.out.println("Next to be processed (peek): " + queue.peekRequest());
+        System.out.println("No inventory changes have occurred at this stage.");
+    }
+}
+
+package com.hotel.uc5;
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+/**
+ * Manages incoming booking requests using a FIFO queue.
  * <p>
- * This class demonstrates the fundamental structure of a Java application,
- * including the use of a class as a container, the main() method as the
- * JVM entry point, and console output via System.out.println().
+ * Ensures fair ordering of requests without performing any room allocation
+ * or modifying inventory state at this stage.
  * </p>
  *
  * @author Niranjan Manivannan
  * @version 1.0
  */
-public class HotelBookingApp {
+public class BookingRequestQueue {
+
+    private final Queue<Reservation> requestQueue;
+
+    public BookingRequestQueue() {
+        requestQueue = new LinkedList<>();
+    }
 
     /**
-     * The main method is the entry point of the Hotel Booking System.
-     * <p>
-     * The JVM invokes this method directly when the application starts.
-     * Execution proceeds linearly from top to bottom, printing a welcome
-     * message and version information before the application terminates.
-     * </p>
+     * Adds a booking request to the end of the queue.
      *
-     * @param args command-line arguments (not used in this use case)
+     * @param reservation the guest's booking request
      */
-    public static void main(String[] args) {
+    public void addRequest(Reservation reservation) {
+        requestQueue.offer(reservation);
+        System.out.println("Request queued: " + reservation);
+    }
 
-        System.out.println("========================================");
-        System.out.println("   Welcome to Hotel Booking System      ");
-        System.out.println("   Application Name : Hotel Booking System");
-        System.out.println("   Version          : v1.0               ");
-        System.out.println("========================================");
-        System.out.println("Application started successfully.");
-        System.out.println("Application terminated.");
+    /**
+     * Retrieves and removes the next request from the queue (FIFO).
+     *
+     * @return the earliest pending reservation, or null if queue is empty
+     */
+    public Reservation pollRequest() {
+        return requestQueue.poll();
+    }
+
+    /**
+     * Peeks at the next request without removing it.
+     *
+     * @return the next pending reservation, or null if queue is empty
+     */
+    public Reservation peekRequest() {
+        return requestQueue.peek();
+    }
+
+    public boolean isEmpty() { return requestQueue.isEmpty(); }
+    public int     size()    { return requestQueue.size(); }
+
+    /**
+     * Displays all pending requests in queue order.
+     */
+    public void displayQueue() {
+        System.out.println("---- Pending Booking Requests (" + size() + " total) ----");
+        int position = 1;
+        for (Reservation r : requestQueue) {
+            System.out.println("  " + position++ + ". " + r);
+        }
     }
 }
+
+package com.hotel.uc5;
+
+/**
+ * Represents a guest's booking request (intent to reserve a room).
+ *
+ * @author Niranjan Manivannan
+ * @version 1.0
+ */
+public class Reservation {
+
+    private final String guestName;
+    private final String roomType;
+    private final int    nights;
+
+    public Reservation(String guestName, String roomType, int nights) {
+        this.guestName = guestName;
+        this.roomType  = roomType;
+        this.nights    = nights;
+    }
+
+    public String getGuestName() { return guestName; }
+    public String getRoomType()  { return roomType; }
+    public int    getNights()    { return nights; }
+
+    @Override
+    public String toString() {
+        return String.format("Reservation[guest=%s, roomType=%s, nights=%d]",
+                guestName, roomType, nights);
+    }
+}
+
